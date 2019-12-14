@@ -1,0 +1,15 @@
+{
+    "name": "popcorn/lambda",
+    "description": "A tool to create PHP lambda's",
+    "type": "Library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mike McGrath",
+            "email": "mike.mcgrath@rallysportdirect.com"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^3.129"
+    }
+}
