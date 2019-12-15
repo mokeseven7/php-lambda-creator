@@ -1,0 +1,14 @@
+{
+    "name": "popcorn/build-php",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mike McGrath",
+            "email": "mike.mcgrath@rallysportdirect.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.5"
+    }
+}
