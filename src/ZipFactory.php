@@ -14,22 +14,20 @@ class ZipFactory
 
 	public function __construct($dirname, array $options = [])
 	{
-		$this->dirName = $dirname;
+		$this->dirName = realpath($dirname);
+		$this->options = $options;
 		$this->zip = new ZipArchive;
 	}
 
 	public function zip($zipName, $exclude = [])
 	{
-		//Get full path of directory to zip
-		$directoryPath = realpath($this->dirName);
-
 		//Set output zip name, and zip options
 		$this->zip->open($zipName, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
 		// Create recursive directory iterator
 		/** @var SplFileInfo[] $files */
 		$files = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($directoryPath),
+			new RecursiveDirectoryIterator($this->dirName),
 			RecursiveIteratorIterator::LEAVES_ONLY
 		);
 
@@ -39,10 +37,15 @@ class ZipFactory
 			if (!$file->isDir()) {
 				// Get real and relative path for current file
 				$filePath = $file->getRealPath();
-				$relativePath = substr($filePath, strlen($directoryPath) + 1);
+				$relativePath = substr($filePath, strlen($this->dirName) + 1);
+				echo $relativePath;
 
-				// Add current file to archive
-				$this->zip->addFile($filePath, $relativePath);
+				//Build the zip file, passing in the output dir if set
+				if (isset($this->options['outputDir'])) {
+					$this->zip->addFile($filePath, $this->options['outputDir'] . '/' . $relativePath);
+				} else {
+					$this->zip->addFile($filePath, $relativePath);
+				}
 			}
 		}
 		$this->zip->close();

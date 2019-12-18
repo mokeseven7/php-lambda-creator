@@ -4,6 +4,7 @@ namespace Popcorn\PHPLambda;
 
 use Aws\Credentials\Credentials;
 use Aws\Lambda\LambdaClient;
+use Exception;
 
 class Lambda
 {
@@ -20,23 +21,34 @@ class Lambda
 	}
 
 	public function createFunction($name)
-	{ }
-
-	public function functionConfiguration()
 	{
-		$lambdaConfig = [
+		$buildZip = new ZipFactory('function', ['outputDir' => 'function-build']);
+		$buildZip->zip('function-build.zip');
+
+		$params = $this->functionConfiguration($name);
+		try {
+			$this->lambda->createFunction($params);
+		} catch (Exception $exception) {
+			echo "<pre>";
+			print_r($exception->getMessage());
+		}
+	}
+
+	public function functionConfiguration($name)
+	{
+		return [
 			'Code' => [
-				'S3Bucket' => 'phplayer-rally-mmcgrath',
-				'S3Key' => 'function.zip',
-				'ZipFile' => 'function.zip',
+				// 'S3Bucket' => 'phplayer-rally-mmcgrath',
+				// 'S3Key' => 'function-build.zip',
+				'ZipFile' => file_get_contents('function-build.zip'),
 			],
 			'Layers' => [
 				getenv("AWS_RUNTIME_LAYER_ARN"),
 				getenv("AWS_VENDOR_LAYER_ARN"),
 			],
-			'FunctionName' => '<string>',
-			'Handler' => '<string>',
-			'Role' => '<string>',
+			'FunctionName' => $name,
+			'Handler' => 'hello',
+			'Role' => 'arn:aws:iam::869029932727:role/api-lambda',
 			'Runtime' => 'provided',
 
 		];
