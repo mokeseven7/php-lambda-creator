@@ -12,7 +12,7 @@ fi
 
 
 # Zip the php binary with the boostrap file
-cd build && zip -r runtime.zip bin bootstrap && zip -r vendor.zip vendor/
+zip -r runtime.zip bin bootstrap && zip -r vendor.zip vendor/
 
 # Publish the runtime layer
 aws lambda publish-layer-version \

@@ -4,6 +4,7 @@ namespace Popcorn\PHPLambda;
 
 use Aws\Credentials\Credentials;
 use Aws\Lambda\LambdaClient;
+use Popcorn\PHPLambda\ZipFactory;
 use Exception;
 
 class Lambda

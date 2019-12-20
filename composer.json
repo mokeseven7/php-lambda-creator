@@ -1,7 +1,7 @@
 {
     "name": "popcorn/lambda",
     "description": "A tool to create PHP lambda's",
-    "type": "Library",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
