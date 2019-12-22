@@ -53,7 +53,15 @@ Finally, set the AWS_LAMBDA_VERSION in the .env file to 'latest'.
 
 ## Background Information.
 
-If you aren't familiar with how lambda works, I will take a moment to explain some of the terminology. If you feel comfortable using lambda, please feel free to jump to the [next section](#building-the-layers)
+If you aren't familiar with how lambda works, I will take a moment to explain some of the terminology. If you feel comfortable using lambda, please feel free to jump to the [next section](#building-the-layers).
+
+AWS lambda is a service AWS exposes to allow developers to ship code as small units. While a lambda function does not have to consist of single function, as developers, it is often most effective to shift our thinking to this type of arcitecture. When lambda first came out back in 2014, it supported a few langauges, and PHP was not one of them. While it was techincally still possible to execute PHP via process bridge with node, it was very complicated, and the developer experience was, well, shit.
+
+In 2017, AWS announced general avaiabllity of something called the custom runtime API, which allowed developers to execute any programming laugage that was capable of being boostraped within the confinded of the greater lambda rules.
+
+At its core, the lambda service is nothing more than on demand docker container, capable of being spun up with nothing more then an web request being sent to it. These containers are short lived, which means they are not running when they are not executing your program. The pricing model of something like this is whats drawn alot of business's curiosity and eventual adoption of this type of arcitecture.
+
+In addition to this custom runtime api iteself, lambda gives us something called "layers". These layers sit below our actual function code, and allow us, for example, to build up a container in which the php binary is accessible.
 
 ## Building The Layers
 
