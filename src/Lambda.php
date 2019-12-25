@@ -11,12 +11,14 @@ class Lambda
 {
 	private $config = [];
 	protected $lambda;
+	protected $name;
 
-	public function __construct(array $config = [])
+	public function __construct($name = null, array $config = [])
 	{
 		$this->config['region'] = isset($config['region']) ? $config['region'] : getenv("AWS_REGION");
 		$this->config['version'] = getenv("AWS_LAMBDA_CLIENT_VERSION") ? getenv("AWS_LAMBDA_CLIENT_VERSION")  : 'latest';
 		$this->config['credentials'] =  new Credentials(getenv("AWS_ACCESS_KEY_ID"), getenv("AWS_SECRET_ACCESS_KEY"));
+		$this->name = $name;
 
 		$this->lambda = new LambdaClient($this->config);
 	}
@@ -32,6 +34,38 @@ class Lambda
 		} catch (Exception $exception) {
 			echo "<pre>";
 			print_r($exception->getMessage());
+		}
+	}
+
+	public function updateLambdaCode($name)
+	{
+		$buildZip = new ZipFactory('function', ['outputDir' => 'function-build']);
+		$buildZip->zip('function-build.zip');
+
+		$updated = $this->lambda->updateFunctionCode([
+			'FunctionName' => $name,
+			'Publish' => true,
+			'ZipFile' => file_get_contents('function-build.zip'),
+		]);
+
+		echo $updated['FuntionName'] . ' Has Been Updated!';
+	}
+
+	public function createOrUpdate()
+	{
+		$functions = $this->lambda->listFunctions();
+		$list = [];
+
+		foreach ($functions['Functions'] as $function) {
+			array_push($list, $function['FunctionName']);
+		}
+
+		if (in_array($this->name, $list)) {
+			//the function already exists in lambda, update it
+			$this->updateLambdaCode($this->name);
+		} else {
+			//the function does not exist in lambda, create it
+			$this->createFunction($this->name);
 		}
 	}
 
@@ -55,37 +89,3 @@ class Lambda
 		];
 	}
 }
-
-
-// $result = $client->createFunction([
-//     'Code' => [ // REQUIRED
-//         'S3Bucket' => '<string>',
-//         'S3Key' => '<string>',
-//         'S3ObjectVersion' => '<string>',
-//         'ZipFile' => <string || resource || Psr\Http\Message\StreamInterface>,
-//     ],
-//     'DeadLetterConfig' => [
-//         'TargetArn' => '<string>',
-//     ],
-//     'Description' => '<string>',
-//     'Environment' => [
-//         'Variables' => ['<string>', ...],
-//     ],
-//     'FunctionName' => '<string>', // REQUIRED
-//     'Handler' => '<string>', // REQUIRED
-//     'KMSKeyArn' => '<string>',
-//     'Layers' => ['<string>', ...],
-//     'MemorySize' => <integer>,
-//     'Publish' => true || false,
-//     'Role' => '<string>', // REQUIRED
-//     'Runtime' => 'nodejs|nodejs4.3|nodejs6.10|nodejs8.10|nodejs10.x|nodejs12.x|java8|java11|python2.7|python3.6|python3.7|python3.8|dotnetcore1.0|dotnetcore2.0|dotnetcore2.1|nodejs4.3-edge|go1.x|ruby2.5|provided', // REQUIRED
-//     'Tags' => ['<string>', ...],
-//     'Timeout' => <integer>,
-//     'TracingConfig' => [
-//         'Mode' => 'Active|PassThrough',
-//     ],
-//     'VpcConfig' => [
-//         'SecurityGroupIds' => ['<string>', ...],
-//         'SubnetIds' => ['<string>', ...],
-//     ],
-// ]);
