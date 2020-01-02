@@ -21,6 +21,7 @@ class ZipFactory
 
 	public function zip($zipName, $exclude = [])
 	{
+		print_r($this->dirName);
 		//Set output zip name, and zip options
 		$this->zip->open($zipName, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
@@ -38,10 +39,11 @@ class ZipFactory
 				// Get real and relative path for current file
 				$filePath = $file->getRealPath();
 				$relativePath = substr($filePath, strlen($this->dirName) + 1);
-				echo $relativePath;
+
 
 				//Build the zip file, passing in the output dir if set
 				if (isset($this->options['outputDir'])) {
+					echo "";
 					$this->zip->addFile($filePath, $this->options['outputDir'] . '/' . $relativePath);
 				} else {
 					$this->zip->addFile($filePath, $relativePath);
@@ -51,22 +53,3 @@ class ZipFactory
 		$this->zip->close();
 	}
 }
-
-
-
-// // Enter the name of directory 
-// $pathdir = "Directory Name/";  
-// // Enter the name to creating zipped directory 
-// $zipcreated = "Name of Zip.zip";  
-// // Create new zip class 
-// $zip = new ZipArchive; 
-// if($zip -> open($zipcreated, ZipArchive::CREATE ) === TRUE) {  
-//     // Store the path into the variable 
-//     $dir = opendir($pathdir);   
-//     while($file = readdir($dir)) { 
-//         if(is_file($pathdir.$file)) { 
-//             $zip -> addFile($pathdir.$file, $file); 
-//         } 
-//     } 
-//     $zip ->close(); 
-// } 

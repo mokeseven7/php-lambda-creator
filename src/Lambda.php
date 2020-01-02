@@ -25,29 +25,27 @@ class Lambda
 
 	public function createFunction($name)
 	{
-		$buildDir = getenv('LAMBDAROOT') . '/function';
-		echo "BUILDIR" . $buildDir . "\n\n";
-		$buildZip = new ZipFactory('function', ['outputDir' => 'function-build']);
-		$buildZip->zip('function-build.zip');
+		//Left off here
+		$buildZip = new ZipFactory('function', ['outputDir' => 'src']);
+		$buildZip->zip('src.zip');
 
 		$params = $this->functionConfiguration($name);
 		try {
 			$this->lambda->createFunction($params);
 		} catch (Exception $exception) {
-			echo "<pre>";
 			print_r($exception->getMessage());
 		}
 	}
 
 	public function updateLambdaCode($name)
 	{
-		$buildZip = new ZipFactory('function', ['outputDir' => 'function-build']);
-		$buildZip->zip('function-build.zip');
+		$buildZip = new ZipFactory('function', ['outputDir' => 'src']);
+		$buildZip->zip('src');
 
 		$updated = $this->lambda->updateFunctionCode([
 			'FunctionName' => $name,
 			'Publish' => true,
-			'ZipFile' => file_get_contents('function-build.zip'),
+			'ZipFile' => file_get_contents('src.zip'),
 		]);
 
 		echo $updated['FuntionName'] . ' Has Been Updated!';
@@ -77,7 +75,7 @@ class Lambda
 			'Code' => [
 				// 'S3Bucket' => 'phplayer-rally-mmcgrath',
 				// 'S3Key' => 'function-build.zip',
-				'ZipFile' => file_get_contents('function-build.zip'),
+				'ZipFile' => file_get_contents("src.zip"),
 			],
 			'Layers' => [
 				getenv("AWS_RUNTIME_LAYER_ARN"),
