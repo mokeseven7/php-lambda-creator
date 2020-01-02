@@ -40,7 +40,7 @@ class Lambda
 	public function updateLambdaCode($name)
 	{
 		$buildZip = new ZipFactory('function', ['outputDir' => 'src']);
-		$buildZip->zip('src');
+		$buildZip->zip('src.zip');
 
 		$updated = $this->lambda->updateFunctionCode([
 			'FunctionName' => $name,
