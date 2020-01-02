@@ -25,6 +25,8 @@ class Lambda
 
 	public function createFunction($name)
 	{
+		$buildDir = getenv('LAMBDAROOT') . '/function';
+		echo "BUILDIR" . $buildDir . "\n\n";
 		$buildZip = new ZipFactory('function', ['outputDir' => 'function-build']);
 		$buildZip->zip('function-build.zip');
 

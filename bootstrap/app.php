@@ -7,9 +7,11 @@ $packageRootPath = dirname(__DIR__);
 $packageRootEnv = $packageRootPath . '/.env';
 
 if (file_exists($rootEnv)) {
+	putenv("LAMBDAROOT={$rootPath}");
 	$dotenv = Dotenv\Dotenv::createImmutable($rootPath);
 	$dotenv->load();
 } else if ($packageRootEnv . '/.env') {
+	putenv("LAMBDAROOT={$packageRootPath}");
 	$dotenv = Dotenv\Dotenv::createImmutable($packageRootPath);
 	$dotenv->load();
 } else {
