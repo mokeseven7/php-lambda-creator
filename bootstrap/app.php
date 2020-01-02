@@ -1,6 +1,6 @@
 <?php
 
-$rootPath = dirname(dirname(dirname(__DIR__)));
+$rootPath = dirname(dirname(dirname(dirname(__DIR__))));
 $rootEnv = $rootPath . '/.env';
 
 $packageRootPath = dirname(__DIR__);
