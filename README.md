@@ -31,7 +31,7 @@ If you go the composer route, take careful note of any of the below steps that c
 In the root directory of where you have installed this tool, copy the example configuration file to a new file named .env
 
 ```bash
-$ cp .env.example .env
+$ cp vendor/popcorn/lambda/.env.example .env
 ```
 
 In order to create the two "layers" we'll need in order to actually execute our PHP code, we will use the aws cli. Download and install the aws CLI (both version 1 and version 2 will work for the purposes of this libary).
@@ -77,6 +77,6 @@ All of the code necessary to build the runtime and vendor layers exists in the "
 ```
 
 1. `bin/php` - Contains the php 7.3 executable.
-2. `bootstrap` - This file is the brain of our program. It handles instructing lambda on how our code should be executed, and is responsible for handling requests from the runtime API to our lambad code. If you would like a more in depth explanation of how (and why) this code works, check out my medium article [here](https://medium.com/@mike_48770/php-and-the-aws-lambda-custom-runtime-part-1-8ad94c622701#c179).
+2. `bootstrap` - This file is the brain of our program. It handles instructing lambda on how our code should be executed, and is responsible for handling requests from the runtime API to our lambda code. If you would like a more in depth explanation of how (and why) this code works, check out my medium article [here](https://medium.com/@mike_48770/php-and-the-aws-lambda-custom-runtime-part-1-8ad94c622701#c179).
 3. `build.bash` - This is a helper script I created to assist zipping up our layer files, and sending them lambda via the aws cli. You are free to alter this script to your needs, or simply run them in a terminal. If you execute the file directly, ensure you have made the file executable - `chmod +x bootstrap`
 4. `composer.json` contains the required libraries for our layers. In this case, I have opted to use guzzle instead of native curl, so we have a single library. Note - Do not confuse this composer.json for the composer.json in the root. The composer.json in the build directory is for depencies of the runtime layer only. If you need other libraries for your actual function code, we will define those inside of the `function` directory.

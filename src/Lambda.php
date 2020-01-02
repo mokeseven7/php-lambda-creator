@@ -85,7 +85,6 @@ class Lambda
 			'Handler' => 'hello',
 			'Role' => 'arn:aws:iam::869029932727:role/api-lambda',
 			'Runtime' => 'provided',
-
 		];
 	}
 }
