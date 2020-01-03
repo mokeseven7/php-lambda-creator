@@ -80,3 +80,29 @@ All of the code necessary to build the runtime and vendor layers exists in the "
 2. `bootstrap` - This file is the brain of our program. It handles instructing lambda on how our code should be executed, and is responsible for handling requests from the runtime API to our lambda code. If you would like a more in depth explanation of how (and why) this code works, check out my medium article [here](https://medium.com/@mike_48770/php-and-the-aws-lambda-custom-runtime-part-1-8ad94c622701#c179).
 3. `build.bash` - This is a helper script I created to assist zipping up our layer files, and sending them lambda via the aws cli. You are free to alter this script to your needs, or simply run them in a terminal. If you execute the file directly, ensure you have made the file executable - `chmod +x bootstrap`
 4. `composer.json` contains the required libraries for our layers. In this case, I have opted to use guzzle instead of native curl, so we have a single library. Note - Do not confuse this composer.json for the composer.json in the root. The composer.json in the build directory is for depencies of the runtime layer only. If you need other libraries for your actual function code, we will define those inside of the `function` directory.
+
+## Creating a lambda function
+
+In the root directory of your project, create an index file that we can execute.
+
+```bash
+$ touch index.php && chmod +x index.php
+```
+
+Paste the following example code into the newly created index.php file.
+
+```php
+<?php
+
+require "./vendor/autoload.php";
+
+use Popcorn\PHPLambda\Lambda;
+
+$lambdaName = 'my-function';
+
+$lambda = new Lambda($lambdaName);
+$lambda->createOrUpdate($lambdaName);
+
+
+?>
+```
