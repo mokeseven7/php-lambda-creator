@@ -82,7 +82,7 @@ class Lambda
 				getenv("AWS_VENDOR_LAYER_ARN"),
 			],
 			'FunctionName' => $name,
-			'Handler' => 'hello',
+			'Handler' => getenv('AWS_HANDLER_FUNCTION_NAME'),
 			'Role' => 'arn:aws:iam::869029932727:role/api-lambda',
 			'Runtime' => 'provided',
 		];
